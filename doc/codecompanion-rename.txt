@@ -1,0 +1,70 @@
+*codecompanion-rename.txt*  Rename slash command extension for codecompanion.nvim
+
+==============================================================================
+CONTENTS                                        *codecompanion-rename-contents*
+
+  1. Introduction ................................. |codecompanion-rename-intro|
+  2. Installation .......................... |codecompanion-rename-installation|
+  3. Configuration ........................ |codecompanion-rename-configuration|
+  4. Usage ..................................... |codecompanion-rename-usage|
+  5. Persistence .............................. |codecompanion-rename-persistence|
+
+==============================================================================
+1. INTRODUCTION                                   *codecompanion-rename-intro*
+
+codecompanion-rename.nvim adds a `/rename` slash command to codecompanion.nvim
+chat buffers. Custom names persist across ACP sessions and are shown in the
+`/resume` session picker.
+
+==============================================================================
+2. INSTALLATION                                *codecompanion-rename-installation*
+
+Using lazy.nvim: >lua
+  {
+    "yourusername/codecompanion-rename.nvim",
+    dependencies = { "olimorris/codecompanion.nvim" },
+  }
+<
+
+==============================================================================
+3. CONFIGURATION                              *codecompanion-rename-configuration*
+
+Register the extension in your codecompanion setup: >lua
+  require("codecompanion").setup({
+    extensions = {
+      rename = { enabled = true },
+    },
+  })
+<
+
+==============================================================================
+4. USAGE                                          *codecompanion-rename-usage*
+
+`/rename`                                                     *codecompanion-/rename*
+  Rename the current chat buffer. Can be used with any adapter type (HTTP or
+  ACP). When used with an ACP adapter, the name is persisted and restored when
+  the session is resumed.
+
+  With inline argument: >
+    /rename My project refactor
+<
+  Without argument: opens an input prompt pre-filled with the current title.
+
+`/resume`                                                     *codecompanion-/resume*
+  The built-in `/resume` command is overridden to display custom names in the
+  session picker. Sessions you have renamed show their custom name; others fall
+  back to the agent-provided title or session ID.
+
+==============================================================================
+5. PERSISTENCE                              *codecompanion-rename-persistence*
+
+Custom titles are stored as JSON at: >
+  $XDG_DATA_HOME/nvim/codecompanion/session_titles.json
+<
+  (typically `~/.local/share/nvim/codecompanion/session_titles.json`)
+
+Entries older than 90 days are pruned automatically on load. Titles for
+sessions that no longer appear in the server's session list are pruned each
+time `/resume` is opened.
+
+vim:tw=78:ts=8:ft=help:norl:

@@ -1,0 +1,1 @@
+-- intentionally empty: this plugin is activated via codecompanion's extension system
