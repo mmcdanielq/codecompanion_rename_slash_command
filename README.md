@@ -12,7 +12,7 @@ A [codecompanion.nvim](https://github.com/olimorris/codecompanion.nvim) extensio
 }
 ```
 
-Or configure the extension directly via lazy's `opts`:
+Configure the extension directly via lazy's `opts`:
 
 ```lua
 {
