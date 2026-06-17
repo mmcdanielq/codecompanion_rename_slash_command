@@ -1,6 +1,46 @@
 local session_titles = require("codecompanion_rename.session_titles")
 local utils = require("codecompanion.utils")
 
+---Parse an ISO 8601 timestamp string into a Unix timestamp
+---@param iso string
+---@return number|nil
+local function timestamp_from_iso(iso)
+  local pattern = "(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)"
+  local year, month, day, hour, min, sec = iso:match(pattern)
+  if not year then
+    return nil
+  end
+  local date = {
+    year = tonumber(year),
+    month = tonumber(month),
+    day = tonumber(day),
+    hour = tonumber(hour),
+    min = tonumber(min),
+    sec = tonumber(sec),
+  }
+  -- os.time() treats the table as local time; add the UTC offset to correct for this
+  local now = os.time()
+  local utc = os.date("!*t", now)
+  local utc_offset = os.difftime(now, os.time(utc))
+  return os.time(date) + utc_offset
+end
+
+---Format a Unix timestamp as a short relative string (e.g. "5m", "2h", "3d")
+---@param timestamp number
+---@return string
+local function make_relative(timestamp)
+  local diff = os.time() - timestamp
+  if diff < 60 then
+    return diff .. "s"
+  elseif diff < 3600 then
+    return math.floor(diff / 60) .. "m"
+  elseif diff < 86400 then
+    return math.floor(diff / 3600) .. "h"
+  else
+    return math.floor(diff / 86400) .. "d"
+  end
+end
+
 ---@class CodeCompanion.SlashCommand.Resume: CodeCompanion.SlashCommand
 local SlashCommand = {}
 
@@ -42,9 +82,9 @@ local function format_session(session, custom_title)
   local parts = {}
 
   if session.updatedAt then
-    local ts = utils.timestamp_from_iso(session.updatedAt)
+    local ts = timestamp_from_iso(session.updatedAt)
     if ts then
-      table.insert(parts, "(" .. utils.make_relative(ts) .. ")")
+      table.insert(parts, "(" .. make_relative(ts) .. ")")
     end
   end
 
