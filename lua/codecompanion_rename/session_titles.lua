@@ -1,10 +1,21 @@
-local TTL_SECONDS = 90 * 24 * 60 * 60 -- 90 days
+local TTL_SECONDS = 90 * 24 * 60 * 60 -- default: 90 days, overridden by init()
 
 local data_path = vim.fs.joinpath(
   vim.fn.stdpath("data"),
   "codecompanion",
   "session_titles.json"
 )
+
+---Configure the module. Must be called before any reads or writes.
+---@param opts {ttl_days?: number, data_path?: string}
+local function init(opts)
+  if opts and opts.ttl_days then
+    TTL_SECONDS = opts.ttl_days * 24 * 60 * 60
+  end
+  if opts and opts.data_path then
+    data_path = opts.data_path
+  end
+end
 
 ---@type table<string, {title: string, updated_at: number}>|nil
 local cache = nil
@@ -136,6 +147,7 @@ local function reconcile(live_session_ids)
 end
 
 return {
+  init = init,
   load_all = load_all,
   get = get,
   set = set,

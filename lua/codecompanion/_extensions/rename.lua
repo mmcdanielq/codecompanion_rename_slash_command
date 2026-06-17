@@ -1,9 +1,11 @@
 ---@class CodeCompanion.Extension.Rename
 local M = {}
 
----@param opts table
+---@param opts {ttl_days?: number, data_path?: string}
 function M.setup(opts)
   opts = opts or {}
+
+  require("codecompanion_rename.session_titles").init(opts)
 
   local config = require("codecompanion.config")
   local slash_commands = config.interactions.chat.slash_commands

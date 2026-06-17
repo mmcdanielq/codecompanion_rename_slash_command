@@ -17,10 +17,23 @@ Then register the extension in your codecompanion setup:
 ```lua
 require("codecompanion").setup({
   extensions = {
-    rename = { enabled = true },
+    rename = {
+      enabled = true,
+      opts = {
+        ttl_days = 90,   -- days before a stored title expires (default: 90)
+        data_path = nil, -- override the JSON storage path (default: see below)
+      },
+    },
   },
 })
 ```
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `ttl_days` | `number` | `90` | Days before a stored session title expires and is pruned |
+| `data_path` | `string` | `~/.local/share/nvim/codecompanion/session_titles.json` | Path to the JSON file where session titles are stored |
 
 ## Usage
 

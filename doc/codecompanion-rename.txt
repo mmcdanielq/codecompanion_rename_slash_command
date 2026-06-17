@@ -32,10 +32,25 @@ Using lazy.nvim: >lua
 Register the extension in your codecompanion setup: >lua
   require("codecompanion").setup({
     extensions = {
-      rename = { enabled = true },
+      rename = {
+        enabled = true,
+        opts = {
+          ttl_days = 90,   -- days before a stored title expires (default: 90)
+          data_path = nil, -- custom path for the JSON file (default: see below)
+        },
+      },
     },
   })
 <
+
+`ttl_days` ~
+  Number of days before a stored session title is considered expired and pruned
+  on next load. Default: `90`.
+
+`data_path` ~
+  Absolute path to the JSON file where session titles are stored. Default: >
+    $XDG_DATA_HOME/nvim/codecompanion/session_titles.json
+<  (typically `~/.local/share/nvim/codecompanion/session_titles.json`)
 
 ==============================================================================
 4. USAGE                                          *codecompanion-rename-usage*
@@ -63,8 +78,10 @@ Custom titles are stored as JSON at: >
 <
   (typically `~/.local/share/nvim/codecompanion/session_titles.json`)
 
-Entries older than 90 days are pruned automatically on load. Titles for
-sessions that no longer appear in the server's session list are pruned each
-time `/resume` is opened.
+The path can be overridden with the `data_path` option (see |codecompanion-rename-configuration|).
+
+Entries older than 90 days (configurable via `ttl_days`) are pruned
+automatically on load. Titles for sessions that no longer appear in the
+server's session list are pruned each time `/resume` is opened.
 
 vim:tw=78:ts=8:ft=help:norl:
