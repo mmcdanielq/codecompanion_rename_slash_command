@@ -7,12 +7,33 @@ A [codecompanion.nvim](https://github.com/olimorris/codecompanion.nvim) extensio
 ```lua
 -- lazy.nvim
 {
-  "yourusername/codecompanion-rename.nvim",
+  "mmcdanielq/codecompanion_rename_slash_command",
   dependencies = { "olimorris/codecompanion.nvim" },
 }
 ```
 
-Then register the extension in your codecompanion setup:
+Or configure the extension directly via lazy's `opts`:
+
+```lua
+{
+  "olimorris/codecompanion.nvim",
+  opts = {
+    -- ...
+    extensions = {
+      rename = {
+        enabled = true,
+        opts = {
+          ttl_days = 90,   -- days before a stored title expires (default: 90)
+          data_path = nil, -- override the JSON storage path (default: see below)
+        },
+      },
+    },
+    -- ...
+  },
+}
+```
+
+Or via a standalone `require` call:
 
 ```lua
 require("codecompanion").setup({
