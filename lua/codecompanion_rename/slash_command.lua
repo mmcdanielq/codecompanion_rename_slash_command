@@ -22,7 +22,8 @@ function SlashCommand:execute()
     end
     self.Chat.title_locked = true
     self.Chat:set_title(title)
-    local session_id = self.Chat.acp_connection and self.Chat.acp_connection.session_id
+    local session_id = self.Chat.acp_connection
+      and self.Chat.acp_connection.session_id
     if session_id then
       session_titles.set(session_id, title)
     end
@@ -32,7 +33,10 @@ function SlashCommand:execute()
     return apply(self.context.args)
   end
 
-  vim.ui.input({ prompt = "Rename chat: ", default = self.Chat.title or "" }, apply)
+  vim.ui.input(
+    { prompt = "Rename chat: ", default = self.Chat.title or "" },
+    apply
+  )
 end
 
 return SlashCommand

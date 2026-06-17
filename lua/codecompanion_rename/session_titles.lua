@@ -1,6 +1,10 @@
 local TTL_SECONDS = 90 * 24 * 60 * 60 -- 90 days
 
-local data_path = vim.fs.joinpath(vim.fn.stdpath("data"), "codecompanion", "session_titles.json")
+local data_path = vim.fs.joinpath(
+  vim.fn.stdpath("data"),
+  "codecompanion",
+  "session_titles.json"
+)
 
 ---@type table<string, {title: string, updated_at: number}>|nil
 local cache = nil
@@ -14,11 +18,17 @@ local function flush()
   end
   local ok, encoded = pcall(vim.json.encode, cache)
   if not ok then
-    return vim.notify("codecompanion-rename: failed to encode session titles JSON: " .. encoded, vim.log.levels.ERROR)
+    return vim.notify(
+      "codecompanion-rename: failed to encode session titles JSON: " .. encoded,
+      vim.log.levels.ERROR
+    )
   end
   local file = io.open(data_path, "w")
   if not file then
-    return vim.notify("codecompanion-rename: failed to open " .. data_path .. " for writing", vim.log.levels.ERROR)
+    return vim.notify(
+      "codecompanion-rename: failed to open " .. data_path .. " for writing",
+      vim.log.levels.ERROR
+    )
   end
   file:write(encoded)
   file:close()
@@ -49,7 +59,11 @@ local function load_all()
   local now = os.time()
   local pruned = false
   for session_id, entry in pairs(decoded) do
-    if type(entry) ~= "table" or type(entry.title) ~= "string" or type(entry.updated_at) ~= "number" then
+    if
+      type(entry) ~= "table"
+      or type(entry.title) ~= "string"
+      or type(entry.updated_at) ~= "number"
+    then
       decoded[session_id] = nil
       pruned = true
     elseif (now - entry.updated_at) > TTL_SECONDS then
@@ -90,7 +104,7 @@ end
 ---@return nil
 local function remove(session_id)
   load_all()
-  if cache[session_id] then
+  if cache and cache[session_id] then
     cache[session_id] = nil
     flush()
   end
@@ -101,6 +115,10 @@ end
 ---@return nil
 local function reconcile(live_session_ids)
   load_all()
+  if not cache then
+    return
+  end
+
   local live = {}
   for _, id in ipairs(live_session_ids) do
     live[id] = true
