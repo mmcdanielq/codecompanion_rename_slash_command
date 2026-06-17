@@ -166,8 +166,8 @@ function SlashCommand:execute()
 
       local custom_title = session_titles.get(Chat.acp_connection.session_id)
       if custom_title then
-        Chat.title_locked = true
         Chat:set_title(custom_title)
+        Chat.title_locked = true
       elseif selected.title then
         Chat:set_title(selected.title)
       end
