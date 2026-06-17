@@ -27,8 +27,8 @@ function M.setup(opts)
   -- Monkey-patch Chat.set_title to respect title_locked
   local Chat = require("codecompanion.interactions.chat")
   local original_set_title = Chat.set_title
-  Chat.set_title = function(self, title)
-    if self.title_locked then
+  Chat.set_title = function(self, title, force)
+    if self.title_locked and not force then
       return self
     end
     return original_set_title(self, title)

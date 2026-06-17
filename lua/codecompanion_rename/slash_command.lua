@@ -20,7 +20,7 @@ function SlashCommand:execute()
     if not title or title == "" then
       return
     end
-    self.Chat:set_title(title)
+    self.Chat:set_title(title, true)
     self.Chat.title_locked = true
     local session_id = self.Chat.acp_connection
       and self.Chat.acp_connection.session_id
