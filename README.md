@@ -26,8 +26,12 @@ require("codecompanion").setup({
 
 **`/rename`** — rename the current chat buffer.
 
+![/rename command in the chat buffer](assets/rename-command.png)
+
 - With an inline argument: `/rename My project refactor`
 - Without an argument: opens an input prompt pre-filled with the current title
+
+![/rename input prompt](assets/rename-prompt.png)
 
 Works with both HTTP and ACP adapters. With ACP, the name is persisted to disk and restored when the session is resumed via `/resume`.
 
